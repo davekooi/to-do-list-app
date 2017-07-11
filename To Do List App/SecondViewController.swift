@@ -8,8 +8,34 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class SecondViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var textField: UITextField!
+    
+    @IBAction func addItem(_ sender: Any) {
+        
+        let itemObject = UserDefaults.standard.object(forKey: "items")
+        
+        var items: [String]
+        
+        if  let tempItems = itemObject as? [String] {
+            
+            items = tempItems
+            
+            items.append(textField.text!)
+            
+            
+        } else {
+            
+            items = [textField.text!]
+            
+        }
+        
+        UserDefaults.standard.set(items, forKey: "items")
+        
+        textField.text = ""
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,7 +45,15 @@ class SecondViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        textField.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
 }
 
